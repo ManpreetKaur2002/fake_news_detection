@@ -2,12 +2,13 @@ import pandas as pd
 import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import BertTokenizer, BertForSequenceClassification, AdamW
+from transformers import BertTokenizer, BertForSequenceClassification
+from torch.optim import AdamW
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-# Load dataset
-df = pd.read_csv("train.csv")  # Ensure train.csv is in your working directory
+# Load dataset (first 10 rows)
+df = pd.read_csv("train.csv").head(10)  # Load only 10 rows
 
 # Drop missing values
 df.dropna(inplace=True)
@@ -39,20 +40,20 @@ class FakeNewsDataset(Dataset):
             return_tensors="pt"
         )
         return {
-            "input_ids": encoding["input_ids"].squeeze(0),
-            "attention_mask": encoding["attention_mask"].squeeze(0),
+            "input_ids": encoding["input_ids"].squeeze(),
+            "attention_mask": encoding["attention_mask"].squeeze(),
             "label": torch.tensor(self.labels[idx], dtype=torch.long)
         }
 
 # Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=2, random_state=42)
 
 # Create Dataset and DataLoader
 train_dataset = FakeNewsDataset(X_train, y_train, tokenizer)
 test_dataset = FakeNewsDataset(X_test, y_test, tokenizer)
 
-train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=8, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)  # Small batch size
+test_loader = DataLoader(test_dataset, batch_size=2, shuffle=False)
 
 # Load BERT model for binary classification
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -102,9 +103,9 @@ with torch.no_grad():
 # Calculate Performance Metrics
 bert_results = {
     "Accuracy": accuracy_score(true_labels, preds),
-    "Precision": precision_score(true_labels, preds),
-    "Recall": recall_score(true_labels, preds),
-    "F1-Score": f1_score(true_labels, preds)
+    "Precision": precision_score(true_labels, preds, zero_division=0),
+    "Recall": recall_score(true_labels, preds, zero_division=0),
+    "F1-Score": f1_score(true_labels, preds, zero_division=0)
 }
 
 print("\nBERT Model Performance:", bert_results)
