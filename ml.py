@@ -21,6 +21,7 @@ print(df.columns)
 
 # Drop missing values
 df.dropna(inplace=True)
+print("done drop na")
 
 # Text cleaning function
 def clean_text(text):
@@ -35,6 +36,7 @@ def clean_text(text):
 
 # Apply cleaning to text column
 df['text'] = df['text'].apply(clean_text)
+print("done cleaning")
 
 # Extract features and labels
 X = df['text']
@@ -43,9 +45,11 @@ y = df['label']
 # Convert text to numerical features using TF-IDF
 vectorizer = TfidfVectorizer(max_features=5000)
 X_tfidf = vectorizer.fit_transform(X)
+print("done vectorizing")
 
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.2, random_state=42)
+print("done splitting")
 
 # Model Initialization
 log_reg = LogisticRegression()
@@ -56,9 +60,11 @@ rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 log_reg.fit(X_train, y_train)
 svm_model.fit(X_train, y_train)
 rf_model.fit(X_train, y_train)
+print("trained")
 
 # Evaluate models
 def evaluate_model(model, X_test, y_test):
+    print("evaluating models")
     y_pred = model.predict(X_test)
     return {
         "Accuracy": accuracy_score(y_test, y_pred),
