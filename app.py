@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Response
 import numpy as np
 import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -57,10 +57,10 @@ def feedback():
     q_table[state_idx][action] = q_table[state_idx][action] + learning_rate * (reward - q_table[state_idx][action])
 
     # Save updated Q-table
-    np.save('model/q_table.npy', q_table)
+    # np.save('model/q_table.npy', q_table)
 
     return render_template('index.html', prediction=None, news=None, message="✅ Thank you for your feedback!")
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+def handler(environ, start_response):
+    return app(environ, start_response)
