@@ -31,6 +31,7 @@ def predict_fake_news(text):
 # === Web Routes ===
 @app.route('/')
 def home():
+    return "Hello from Flask on Vercel!"
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
