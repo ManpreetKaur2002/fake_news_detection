@@ -31,7 +31,7 @@ def predict_fake_news(text):
 # === Web Routes ===
 @app.route('/')
 def home():
-    return "Hello from Flask on Vercel!"
+    # return "Hello from Flask on Vercel!"
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
@@ -63,5 +63,8 @@ def feedback():
     return render_template('index.html', prediction=None, news=None, message="✅ Thank you for your feedback!")
 
 
-def handler(environ, start_response):
-    return app(environ, start_response)
+# def handler(environ, start_response):
+#     return app(environ, start_response)
+
+if __name__ == '__main__':
+    app.run()
