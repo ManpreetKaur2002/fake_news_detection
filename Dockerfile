@@ -23,6 +23,7 @@ RUN pip install --upgrade pip setuptools wheel build
 COPY requirements.txt .
 
 # Install Python dependencies
+RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
