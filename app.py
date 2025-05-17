@@ -4,7 +4,7 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 import re
-import joblib
+import os
 
 # Initialize Flask
 app = Flask(__name__)
