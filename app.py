@@ -4,14 +4,17 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 import re
+import joblib
 
 # Initialize Flask
 app = Flask(__name__)
 
 # === Load Models ===
 q_table = np.load('model/q_table.npy')  # Trained Q-table
-vectorizer = pickle.load(open('model/vectorizer.pkl', 'rb'))  # TF-IDF Vectorizer
-label_encoder = pickle.load(open('model/label_encoder.pkl', 'rb'))  # LabelEncoder
+vectorizer = joblib.load('model/vectorizer.joblib')
+label_encoder = joblib.load('model/label_encoder.joblib')
+# vectorizer = pickle.load(open('model/vectorizer.pkl', 'rb'))  # TF-IDF Vectorizer
+# label_encoder = pickle.load(open('model/label_encoder.pkl', 'rb'))  # LabelEncoder
 
 def clean_text(text):
     return re.sub(r'[^\w\s]', '', text).lower()
